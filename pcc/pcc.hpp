@@ -9,6 +9,7 @@
 #include <pcc/parsers/basic.hpp>
 #include <pcc/parsers/char.hpp>
 #include <pcc/parsers/escaped.hpp>
+#include <pcc/parsers/map.hpp>
 #include <pcc/parsers/one_of.hpp>
 #include <pcc/parsers/parser.hpp>
 #include <pcc/parsers/take.hpp>

@@ -6,6 +6,7 @@ add_executable(
     pcctest 
     core.test.cpp 
     parsers/escaped.test.cpp 
+    parsers/map.test.cpp
     parsers/one_of.test.cpp)
 
 target_link_libraries(pcctest PRIVATE Catch2::Catch2WithMain)
