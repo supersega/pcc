@@ -7,10 +7,11 @@
 
 #include <pcc/parsers/arithmetic.hpp>
 #include <pcc/parsers/basic.hpp>
+#include <pcc/parsers/char.hpp>
 #include <pcc/parsers/escaped.hpp>
+#include <pcc/parsers/one_of.hpp>
 #include <pcc/parsers/parser.hpp>
 #include <pcc/parsers/take.hpp>
-#include <pcc/parsers/char.hpp>
 
 #include <pcc/combinators/alternative.hpp>
 #include <pcc/combinators/optional.hpp>
