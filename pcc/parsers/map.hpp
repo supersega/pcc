@@ -18,4 +18,13 @@ auto map(Map &&fn, Parser &&p) {
     }};
 };
 
+/// @brief Map the result of a parser to a constant value
+/// @param c The constant value to return
+/// @param p The parser to apply
+/// @return A new parser that returns the constant value
+template <typename Constant, ParserFn Parser>
+auto constant(Constant c, Parser &&p) {
+    return map([c](auto) { return c; }, std::forward<Parser>(p));
+};
+
 } // namespace pcc
