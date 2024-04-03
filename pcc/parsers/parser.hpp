@@ -32,14 +32,14 @@ concept ParserFn = is_parser_v<T>;
 // template<typename Pl, typename Pr, std::enable_if_t<is_parser_v<Pl> &&
 // is_parser_v<Pr>>...>
 template <ParserFn Pl, ParserFn Pr>
-inline auto operator<<=(const Pl &l, const Pr &r) {
+inline auto operator<<(const Pl &l, const Pr &r) {
     return parser{[l, r](const auto &src) {
         return l(src).and_then([r](auto v) { return r(v.rest); });
     }};
 }
 
 template <ParserFn Pl, ParserFn Pr>
-inline auto operator>>=(const Pl &l, const Pr &r) {
+inline auto operator>>(const Pl &l, const Pr &r) {
     return parser{[l, r](const auto &src) {
         return l(src).and_then([r](const auto &lv) {
             return r(lv.rest).map([res = lv.value](const auto &rv) {

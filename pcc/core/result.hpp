@@ -173,22 +173,4 @@ struct result final {
 private:
     std::variant<detail::success<S>, detail::error<E>> either;
 };
-
-template <typename Sl, typename El, typename Sr, typename Er>
-inline auto operator<<=(const result<Sl, El> &l,
-                        const result<Sr, Er> &r) -> result<Sr, Er> {
-    if (!l.is_success())
-        return result<Sr, Er>(error<Er>(l.error_unsafe()));
-
-    return r;
-}
-
-template <typename Sl, typename El, typename Sr, typename Er>
-inline auto operator>>=(const result<Sl, El> &l,
-                        const result<Sr, Er> &r) -> result<Sl, El> {
-    if (!r.is_success())
-        return result<Sl, El>(error<El>(r.error_unsafe()));
-
-    return l;
-}
 } // namespace pcc

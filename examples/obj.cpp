@@ -64,22 +64,25 @@ struct model final {
 };
 
 auto eat_line = [] {
-    return take_while([](auto ch) { return !(ch == '\n'); }) >>=
+    return take_while([](auto ch) { return !(ch == '\n'); }) >>
            take(exactly<1>());
 };
 
 auto comments0 = [] {
-    return many(at_least<0>(), tag("#") >>= eat_line() >>= spaces0());
+    return many(at_least<0>(), tag("#") >> eat_line() >> spaces0());
 };
 
 auto material_parser = [] {
-    auto name = tag("newmtl") <<= spaces1() <<=
-        take_while([](unsigned char c) { return !std::isspace(c); }) >>=
-        spaces0();
-    auto ns = tag("Ns") <<= spaces1() <<= arithmetic<double>() >>= spaces0();
-    auto ka = tag("Ka") <<= spaces1() <<= product<std::array<double, 3>>(
-        arithmetic<double>(), arithmetic<double>(), arithmetic<double>()) >>=
-        spaces0();
+    auto name = tag("newmtl") << spaces1() << take_while([](unsigned char c) {
+                    return !std::isspace(c);
+                }) >>
+                spaces0();
+    auto ns = tag("Ns") << spaces1() << arithmetic<double>() >> spaces0();
+    auto ka = tag("Ka") << spaces1()
+                        << product<std::array<double, 3>>(
+                               arithmetic<double>(), arithmetic<double>(),
+                               arithmetic<double>()) >>
+              spaces0();
 };
 
 auto vertex_parser = [] {
@@ -87,11 +90,11 @@ auto vertex_parser = [] {
         return {x, y, z, ow.unwrap_or_else([] { return 1.0; })};
     };
 
-    return comments0() <<= tag("v") <<= spaces1() <<=
-           product(builder, arithmetic<double>() >>= spaces1(),
-                   arithmetic<double>() >>= spaces1(),
-                   arithmetic<double>() >>= spaces1(),
-                   optional(arithmetic<double>() >>= spaces1()));
+    return comments0() << tag("v") << spaces1()
+                       << product(builder, arithmetic<double>() >> spaces1(),
+                                  arithmetic<double>() >> spaces1(),
+                                  arithmetic<double>() >> spaces1(),
+                                  optional(arithmetic<double>() >> spaces1()));
 };
 
 auto texture_coordinate_parser = [] {
@@ -99,22 +102,24 @@ auto texture_coordinate_parser = [] {
         return {u, v, ow.unwrap_or_else([] { return 0.0; })};
     };
 
-    return comments0() <<= tag("vt") <<= spaces1() <<=
-           product(builder, arithmetic<double>() >>= spaces1(),
-                   arithmetic<double>() >>= spaces1(),
-                   optional(arithmetic<double>() >>= spaces1()));
+    return comments0() << tag("vt") << spaces1()
+                       << product(builder, arithmetic<double>() >> spaces1(),
+                                  arithmetic<double>() >> spaces1(),
+                                  optional(arithmetic<double>() >> spaces1()));
 };
 
 auto normal_parser = [] {
-    return comments0() <<= tag("vn") <<= spaces1() <<=
-           product<normal>(arithmetic<double>() >>= spaces1(),
-                           arithmetic<double>() >>= spaces1(),
-                           arithmetic<double>() >>= spaces1());
+    return comments0() << tag("vn") << spaces1()
+                       << product<normal>(arithmetic<double>() >> spaces1(),
+                                          arithmetic<double>() >> spaces1(),
+                                          arithmetic<double>() >> spaces1());
 };
 
 auto material_name_parser = [] {
-    return comments0() <<= tag("usemtl") <<= spaces1() <<=
-           take_while([](unsigned char c) { return !std::isspace(c); }) >>=
+    return comments0() << tag("usemtl") << spaces1()
+                       << take_while([](unsigned char c) {
+                              return !std::isspace(c);
+                          }) >>
            spaces1();
 };
 
@@ -123,23 +128,24 @@ auto smooth_shading_parser = [] {
         return str == "off" ? face::smooth_shading::off
                             : face::smooth_shading::on;
     };
-    return comments0() <<= tag("s") <<= spaces1() <<=
-           product(builder, take_while([](unsigned char c) {
-                       return !std::isspace(c);
-                   })) >>= spaces1();
+    return comments0() << tag("s") << spaces1()
+                       << product(builder, take_while([](unsigned char c) {
+                                      return !std::isspace(c);
+                                  })) >>
+           spaces1();
 };
 
 auto face_index_parser = [] {
-    return product<face_index>(
-        integral<std::size_t>(),
-        optional(symbol('/') <<= integral<std::size_t>()),
-        optional(symbol('/') <<= optional(symbol('/')) <<=
-                 integral<std::size_t>()));
+    return product<face_index>(integral<std::size_t>(),
+                               optional(symbol('/') << integral<std::size_t>()),
+                               optional(symbol('/')
+                                        << optional(symbol('/'))
+                                        << integral<std::size_t>()));
 };
 
 auto face_indecies_parser = [] {
-    return comments0() <<= tag("f") <<= spaces1() <<=
-           many(at_least<3>(), face_index_parser() >>= spaces1());
+    return comments0() << tag("f") << spaces1()
+                       << many(at_least<3>(), face_index_parser() >> spaces1());
 };
 
 auto face_parser = []() {
@@ -168,8 +174,9 @@ auto mesh_parser = [] {
 };
 
 auto material_file_name_parser = [] {
-    return spaces0() <<= comments0() <<= tag("mtllib") <<= spaces1() <<=
-           take_while([](unsigned char c) { return !std::isspace(c); }) >>=
+    return spaces0() << comments0() << tag("mtllib") << spaces1()
+                     << take_while(
+                            [](unsigned char c) { return !std::isspace(c); }) >>
            spaces1();
 };
 

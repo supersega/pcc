@@ -33,9 +33,9 @@ SCENARIO("parse tag from string") {
             };
 
             auto point_parser = product<point3d>(
-                tag("point") <<= symbol(' ') <<= arithmetic<int>(),
-                symbol(' ') <<= arithmetic<int>(),
-                symbol(' ') <<= arithmetic<int>());
+                tag("point") << symbol(' ') << arithmetic<int>(),
+                symbol(' ') << arithmetic<int>(),
+                symbol(' ') << arithmetic<int>());
             auto parse_result = point_parser("point 1 1 1");
             REQUIRE(parse_result.is_success());
         }
@@ -63,8 +63,8 @@ SCENARIO("parse tag from string") {
     GIVEN("integral string") {
         WHEN("string is hex based") {
             auto itegral_cool_parser = alternative(
-                integral<int>(2) >>= alternative(symbol('b'), symbol('B')),
-                integral<int>(16) >>= alternative(symbol('h'), symbol('H')),
+                integral<int>(2) >> alternative(symbol('b'), symbol('B')),
+                integral<int>(16) >> alternative(symbol('h'), symbol('H')),
                 integral<int>());
             auto parse_result1 = itegral_cool_parser("000718");
             REQUIRE(parse_result1.is_success());
@@ -84,32 +84,38 @@ SCENARIO("parse tag from string") {
 
     GIVEN("obj file") {
         WHEN("it is valid we can parse it") {
-            auto vertex = tag("v") <<= symbol(' ') <<=
-                product(arithmetic<double>() >>= symbol(' '),
-                        arithmetic<double>() >>= symbol(' '),
-                        arithmetic<double>() >>= symbol(' '),
-                        optional(arithmetic<double>()));
+            auto vertex = tag("v")
+                          << symbol(' ')
+                          << product(arithmetic<double>() >> symbol(' '),
+                                     arithmetic<double>() >> symbol(' '),
+                                     arithmetic<double>() >> symbol(' '),
+                                     optional(arithmetic<double>()));
 
-            auto texture_coordinate = tag("vt") <<= symbol(' ') <<=
-                product(arithmetic<double>() >>= symbol(' '),
-                        optional(arithmetic<double>() >>= symbol(' ')),
-                        optional(arithmetic<double>() >>= symbol(' ')));
+            auto texture_coordinate =
+                tag("vt") << symbol(' ')
+                          << product(
+                                 arithmetic<double>() >> symbol(' '),
+                                 optional(arithmetic<double>() >> symbol(' ')),
+                                 optional(arithmetic<double>() >> symbol(' ')));
 
-            auto vertex_normal = tag("vn") <<= symbol(' ') <<=
-                product(arithmetic<double>() >>= symbol(' '),
-                        arithmetic<double>() >>= symbol(' '),
-                        arithmetic<double>() >>= symbol(' '));
+            auto vertex_normal =
+                tag("vn") << symbol(' ')
+                          << product(arithmetic<double>() >> symbol(' '),
+                                     arithmetic<double>() >> symbol(' '),
+                                     arithmetic<double>() >> symbol(' '));
 
-            auto parameter_space_vertex = tag("vp") <<= symbol(' ') <<=
-                product(arithmetic<double>() >>= symbol(' '),
-                        optional(arithmetic<double>() >>= symbol(' ')),
-                        optional(arithmetic<double>() >>= symbol(' ')));
+            auto parameter_space_vertex =
+                tag("vp") << symbol(' ')
+                          << product(
+                                 arithmetic<double>() >> symbol(' '),
+                                 optional(arithmetic<double>() >> symbol(' ')),
+                                 optional(arithmetic<double>() >> symbol(' ')));
 
             // 1/2/3
             auto face_index = product(
-                integral<int>(), optional(symbol('/') <<= integral<int>()),
-                optional(symbol('/') <<= optional(symbol('/')) <<=
-                         integral<int>()));
+                integral<int>(), optional(symbol('/') << integral<int>()),
+                optional(symbol('/')
+                         << optional(symbol('/')) << integral<int>()));
 
             struct vertex_indecies final {
                 int indecies[3];
@@ -148,10 +154,10 @@ SCENARIO("parse tag from string") {
             // ||
             // ||
             // face(vi, [vt], [vn])
-            // auto polygonal_face_element = tag("f") <<= symbol(' ') <<=
-            //     product(face_index >>= symbol(' '),
-            //             face_index >>= symbol(' '),
-            //             face_index >>= symbol(' '));
+            // auto polygonal_face_element = tag("f") << symbol(' ') <<
+            //     product(face_index >> symbol(' '),
+            //             face_index >> symbol(' '),
+            //             face_index >> symbol(' '));
         }
     }
 }
