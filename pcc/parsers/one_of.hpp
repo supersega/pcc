@@ -8,8 +8,8 @@ namespace pcc {
 /// @param input The characters to try to parse
 /// @return A parser that tries to parse one of the characters in the input
 template <typename Input>
-auto one_of(Input &&input) {
-    return parser{[input = std::forward<Input>(input)](const auto &src) {
+auto one_of(Input input) {
+    return parser{[input](const auto &src) {
         auto src_view = detail::to_view_string(src);
         auto input_view = detail::to_view_string(input);
         using char_t = typename decltype(src_view)::value_type;

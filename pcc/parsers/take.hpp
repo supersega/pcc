@@ -11,8 +11,8 @@ namespace pcc {
 /// @param pred Predicate to match
 /// @return parser result
 template <typename Pred>
-auto take_while(Pred &&pred) {
-    return parser{[pred = std::forward<Pred>(pred)](const auto &src) {
+auto take_while(Pred pred) {
+    return parser{[pred](const auto &src) {
         auto src_view = detail::to_view_string(src);
         using char_t = typename decltype(src_view)::value_type;
 

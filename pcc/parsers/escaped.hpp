@@ -9,9 +9,8 @@ namespace pcc {
 /// @param control Control symbol
 /// @param escape Escape parser
 template <ParserFn N, ParserFn Escape>
-auto escaped(N &&normal, char control, Escape &&escape) {
-    return parser{[normal = std::forward<N>(normal), control,
-                   escape = std::forward<Escape>(escape)](const auto &src) {
+auto escaped(N normal, char control, Escape escape) {
+    return parser{[normal, control, escape](const auto &src) {
         auto src_view = detail::to_view_string(src);
         using char_t = typename decltype(src_view)::value_type;
 

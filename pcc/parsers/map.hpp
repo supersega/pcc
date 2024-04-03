@@ -9,10 +9,9 @@ namespace pcc {
 /// @param p The parser to apply
 /// @return A new parser that applies the function to the result of the parser
 template <typename Map, ParserFn Parser>
-auto map(Map &&fn, Parser &&p) {
-    return parser{[fn = std::forward<Map>(fn),
-                   p = std::forward<Parser>(p)](const auto &src) mutable {
-        return p(src).map([fn = std::forward<Map>(fn)](const auto &v) {
+auto map(Map fn, Parser p) {
+    return parser{[fn, p](const auto &src) {
+        return p(src).map([fn](const auto &v) {
             return pcc::detail::parsed{fn(v.value), v.rest};
         });
     }};
@@ -23,7 +22,7 @@ auto map(Map &&fn, Parser &&p) {
 /// @param p The parser to apply
 /// @return A new parser that returns the constant value
 template <typename Constant, ParserFn Parser>
-auto constant(Constant c, Parser &&p) {
+auto constant(Constant c, Parser p) {
     return map([c](auto) { return c; }, std::forward<Parser>(p));
 };
 
