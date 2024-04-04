@@ -1,13 +1,17 @@
 #pragma once
 
 #include <pcc/parsers/parser.hpp>
-#include <algorithm>
-#include <cctype>
 #include <string_view>
 
 #include <pcc/core/common.hpp>
 
 namespace pcc {
+/// @brief Lazy parser for recursive parsers
+template <typename T>
+auto lazy(T &&f) {
+    return pcc::parser{[f](auto src) { return f()(src); }};
+}
+
 template <typename Ch>
 auto symbol(Ch ch) {
     return parser{[ch](const auto &src) {
