@@ -16,10 +16,6 @@ auto take_while(Pred pred) {
         auto src_view = detail::to_view_string(src);
         using char_t = typename decltype(src_view)::value_type;
 
-        if (src_view.empty())
-            return not_parsed<decltype(src_view), char_t>(
-                "Can not take from empty string");
-
         auto first = src_view.begin();
         auto last = src_view.end();
 
