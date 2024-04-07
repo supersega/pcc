@@ -1,5 +1,6 @@
 #pragma once
 
+#include <pcc/parsers/parser.hpp>
 #include <vector>
 
 #include <pcc/core/common.hpp>
