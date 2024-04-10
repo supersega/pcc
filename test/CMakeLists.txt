@@ -1,7 +1,5 @@
 find_package(Catch2 REQUIRED)
 
-set(CMAKE_REQUIRED_LINK_OPTIONS "-arch;arm64")
-
 add_executable(
     pcctest 
     core.test.cpp 
