@@ -1,3 +1,4 @@
+[![Build](https://github.com/supersega/pcc/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/supersega/pcc/actions/workflows/cmake-multi-platform.yml)
 # pcc is a parser combinator library with C++20 support.
 
 ## Features
