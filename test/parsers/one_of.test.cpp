@@ -1,4 +1,5 @@
-#include <catch2/catch_all.hpp>
+#include <catch.hpp>
+
 #include <pcc/pcc.hpp>
 using namespace pcc;
 
